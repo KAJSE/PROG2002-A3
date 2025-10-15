@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>City Charity</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+<div class="wrap">
+    <header class="header">
+        <div class="brand">
+            <div class="logo">
+                <img src="images/006-charity.png" alt="Logo" />
+            </div>
+            <div class="brand-meta">
+                <h1 class="brand-title">City Charity</h1>
+                <p class="brand-sub" id="subtitle">
+                    Find community events and fundraisers
+                </p>
+            </div>
+        </div>
+        <nav class="nav">
+            <a class="pill" href="/">Home</a>
+            <a class="pill" href="/search.html">Search</a>
+        </nav>
+    </header>
+
+    <!-- Toolbar / Filters -->
+    <section class="panel toolbar">
+        <div class="field">
+            <label for="q">Keyword</label>
+            <input id="q" type="text" placeholder="Title / summary / venue" />
+        </div>
+
+        <div class="field">
+            <label for="city">City</label>
+            <input id="city" type="text" placeholder="City Name" />
+        </div>
+
+        <div class="field">
+            <label for="state">State/Region</label>
+            <input id="state" type="text" placeholder="State/Region Name"
+            />
+        </div>
+
+        <div class="field sm">
+            <label for="categoryId">Category</label>
+            <select id="categoryId">
+                <option value="">All</option>
+            </select>
+        </div>
+
+        <div class="field sm">
+            <label for="status">Status</label>
+            <select id="status">
+                <option value="active">Active/Upcoming</option>
+                <option value="upcoming">Upcoming only</option>
+                <option value="past">Past</option>
+                <option value="all">All</option>
+            </select>
+        </div>
+
+        <div class="field sm">
+            <label for="start">Start</label>
+            <input id="start" type="datetime-local" />
+        </div>
+
+        <div class="field sm">
+            <label for="end">End</label>
+            <input id="end" type="datetime-local" />
+        </div>
+
+        <div class="actions">
+            <button id="btnSearch" class="btn-primary" type="button">
+                Search
+            </button>
+            <button id="btnReset" class="btn-ghost" type="button">
+                Reset
+            </button>
+        </div>
+    </section>
+
+    <section class="grid" id="eventsGrid"></section>
+
+    <footer class="footer">
+        <small>Powered by KAJSE</small>
+    </footer>
+</div>
+
+<script src="common.js"></script>
+<script>
+  // load category options
+  function loadCategories() {
+    getJSON("/categories").then(function(cates){
+      var categoryId = document.querySelector("#categoryId");
+      var html = '<option value="">All</option>';
+      for (var i=0; i<cates.length; i++) {
+        html += '<option value="'+cates[i].id+'">'+cates[i].name+'</option>';
+      }
+      categoryId.innerHTML = html;
+    });
+  }
+
+  // search events
+  function searchEvents() {
+    var params = [];
+    var status = $("#status").value || "active";
+    var city = $("#city").value;
+    var state = $("#state").value;
+    var cat = $("#categoryId").value;
+    var q = $("#q").value;
+    var start = $("#start").value ? new Date($("#start").value).toISOString() : "";
+    var end = $("#end").value ? new Date($("#end").value).toISOString() : "";
+
+    if(status) {
+      params.push("status="+encodeURIComponent(status));
+    }
+    if(city) {
+      params.push("city="+encodeURIComponent(city));
+    }
+    if(state) {
+      params.push("state="+encodeURIComponent(state));
+    }
+    if(cat) {
+      params.push("categoryId="+encodeURIComponent(cat));
+    }
+    if(q) {
+      params.push("q="+encodeURIComponent(q));
+    }
+    if(start) {
+      params.push("start="+encodeURIComponent(start));
+    }
+    if(end) {
+      params.push("end="+encodeURIComponent(end));
+    }
+
+    var url = "/events" + (params.length ? "?" + params.join("&") : "");
+
+    getJSON(url).then(function(list){
+      var grid = $("#eventsGrid");
+      if(!list || list.length==0){
+        grid.innerHTML = "<p>No events</p>";
+        return;
+      }
+      var html = "";
+      for(var i=0;i<list.length;i++){
+        var e = list[i]
+        html += eventContent(e);
+      }
+      grid.innerHTML = html;
+    }).catch(function(){
+      $("#eventsGrid").innerHTML = "<p>load fail...</p>";
+    });
+  }
+
+  // window load event
+  window.onload = function(){
+    loadCategories();
+    searchEvents();
+
+    $("#btnSearch").onclick = function(){
+      searchEvents();
+    }
+    $("#btnReset").onclick = function(){
+      $("#q").value="";
+      $("#city").value="";
+      $("#state").value="";
+      $("#start").value="";
+      $("#end").value="";
+      $("#categoryId").value="";
+      $("#status").value="active";
+      searchEvents();
+    }
+  }
+
+</script>
+</body>
+</html>

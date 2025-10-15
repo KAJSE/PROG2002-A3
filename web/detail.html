@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>City Charity </title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+<div class="wrap">
+    <!-- Header -->
+    <header class="header">
+        <div class="brand">
+            <div class="logo">
+                <img src="images/006-charity.png" alt="Logo" />
+            </div>
+            <div class="brand-meta">
+                <h1 class="brand-title">City Charity</h1>
+                <p class="brand-sub" id="subtitle">Loading…</p>
+            </div>
+        </div>
+        <nav class="nav">
+            <a class="pill" href="/">Home</a>
+            <a class="pill" href="/search.html">Search</a>
+        </nav>
+    </header>
+
+    <section class="panel" id="detailPanel">
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <small>Powered by KAJSE</small>
+    </footer>
+</div>
+
+<script src="common.js"></script>
+<script>
+  function renderDetail(e){
+    // title
+    document.getElementById('subtitle').textContent = e.name;
+
+    // statis
+    var status = getEventStatus(e);
+    var statusHtml = statusChip(status);
+
+    // where/when
+    var where = [e.venue_name, e.address_line1, e.city, e.state_region, e.postcode]
+      .filter(Boolean).join(' · ') || '—';
+    var when = new Date(e.start_datetime).toLocaleString() + ' — ' + new Date(e.end_datetime).toLocaleString();
+
+    // progress
+    var goal = Number(e.goal_amount || 0);
+    var progress = Number(e.progress_amount || 0);
+    var pct = Math.max(0, Math.min(100, e.progress_percent));
+
+    var html = ''
+      + '<div class="meta">'
+      + '  <span class="chip">'+(e.category_name||'—')+'</span>'
+      + '  <span class="chip">'+(e.organisation_name||'—')+'</span>'
+      +    statusHtml
+      + '</div>'
+      + '<h2 class="detail-title">'+e.name+'</h2>'
+      + '<p class="pr">'+when+'</p>'
+      + '<p class="pr">'+where+'</p>'
+      + (e.short_description ? '<p>'+e.short_description+'</p>' : '')
+      + (e.full_description ? '<p style="white-space:pre-wrap">'+e.full_description+'</p>' : '')
+      + '<div class="panel soft">'
+      + '  <div class="row">'
+      + '    <span class="pr">Goal</span>'
+      + '    <strong>'+goal.toLocaleString()+'</strong>'
+      + '  </div>'
+      + '  <div class="row">'
+      + '    <span class="pr">Progress</span>'
+      + '    <strong>'+progress.toLocaleString()+'</strong>'
+      + '  </div>'
+      + '  <div class="progress">'
+      + '    <div class="bar" style="width:'+(pct == null ? 0 : pct)+'%"></div>'
+      + '  </div>'
+      + '  <p class="pr" style="margin-top:6px">'+(pct == null ? 'No fundraising goal' : (pct+'% reached'))+'</p>'
+      + '  <p class="pr">Confirmed registrations: '+(e.confirmed_participants)+'</p>'
+      + '</div>'
+      + '<div class="detail-actions">'
+      + '  <a class="btn-ghost" href="/search.html">← Back to search</a>'
+      + '  <a class="btn-primary" href="#" onclick="alert(`Registration is under construction.`)">Register</a>'
+    + '</div>';
+
+    document.getElementById('detailPanel').innerHTML = html;
+  }
+
+  function loadDetail() {
+    var arr = location.search.split('=')
+    var id = arr.length > 0 ? arr[1] : '';
+    if (!id) {
+      document.getElementById('detailPanel').innerHTML = '<div class="list-empty"><p class="pr">Missing event id</p></div>';
+      return;
+    }
+    getJSON('/events/' + id).then(function(e){
+      renderDetail(e);
+    }).catch(function(e){
+      console.log(e)
+      document.getElementById('detailPanel').innerHTML = '<div class="list-empty"><p class="pr">Failed to load event</p></div>';
+    });
+  }
+
+  window.onload = loadDetail;
+</script>
+</body>
+</html>
