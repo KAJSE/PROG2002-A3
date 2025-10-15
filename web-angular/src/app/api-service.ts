@@ -19,4 +19,8 @@ export class ApiService {
   getAllCategories() {
     return this.httpClient.get(`${this.SERVER_URL}/categories`)
   }
+
+  getEventById(eventId: number) {
+    return this.httpClient.get(`${this.SERVER_URL}/events/${eventId}`)
+  }
 }

@@ -54,6 +54,7 @@ body{
   color:#1e3a8a;
   font-size:12px;
   text-decoration:none;
+  margin-left: 10px;
 }
 /* Panel / Toolbar */
 .panel{
@@ -298,4 +299,9 @@ input[type="text"],input[type="datetime-local"],select{
 
 .detail-actions {
   margin: 30px 0;
+}
+
+.detail-actions a {
+  margin-right: 10px;
+  text-decoration: none;
 }

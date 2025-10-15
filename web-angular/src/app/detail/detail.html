@@ -1,1 +1,55 @@
-<p>detail works!</p>
+<div class="wrap">
+  <!-- Header -->
+  <header class="header">
+    <div class="brand">
+      <div class="logo">
+        <img src="images/006-charity.png" alt="Logo" />
+      </div>
+      <div class="brand-meta">
+        <h1 class="brand-title">City Charity</h1>
+        <p class="brand-sub" id="subtitle">{{event ? event.name : 'Loading…'}}</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a class="pill" routerLink="/">Home</a>
+      <a class="pill" routerLink="/search">Search</a>
+    </nav>
+  </header>
+
+  <section *ngIf="event" class="panel" id="detailPanel">
+    <div class="meta">
+      <span class="chip">{{event.category_name}}</span>
+      <span class="chip">{{event.organisation_name}}</span>
+      <span class="{{getStatusChip(event).cls}}">{{getStatusChip(event).label}}</span>
+    </div>
+    <h2 class="detail-title">{{event.name}}</h2>
+    <p class="pr">{{eventWhen(event)}}</p>
+    <p class="pr">{{eventWhere(event)}}</p>
+    <p>{{event.short_description}}</p>
+    <p style="white-space:pre-wrap">{{event.full_description}}</p>
+    <div class="panel soft">
+      <div class="row">
+        <span class="pr">Goal </span>
+        <strong>{{event.goal_amount || 0}}</strong>
+      </div>
+      <div class="row">
+        <span class="pr">Progress </span>
+        <strong>{{event.progress_amount || 0}}</strong>
+      </div>
+      <div class="progress">
+        <div class="bar" style="width:{{pct || 0}}%"></div>
+      </div>
+      <p class="pr" style="margin-top:6px">{{pct || 0}}% reached</p>
+      <p class="pr">Confirmed registrations: {{event.confirmed_participants}}</p>
+    </div>
+    <div class="detail-actions">
+      <a class="btn-ghost" routerLink="/search">Back to search</a>
+      <a class="btn-primary" routerLink="/" onclick="alert(`Registration is under construction.`)">Register</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <small>Powered by KAJSE</small>
+  </footer>
+</div>
