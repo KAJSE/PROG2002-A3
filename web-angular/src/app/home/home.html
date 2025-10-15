@@ -1,0 +1,70 @@
+<div class="wrap">
+  <!-- Header -->
+  <header class="header">
+    <div class="brand">
+      <div class="logo">
+        <img src="/images/006-charity.png" alt="Logo" />
+      </div>
+      <div class="brand-meta">
+        <h1 class="brand-title">City Charity</h1>
+        <p class="brand-sub" id="subtitle">
+          Find community events and fundraisers
+        </p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a class="pill" href="/">Home</a>
+      <a class="pill" href="/search.html">Search</a>
+    </nav>
+  </header>
+
+  <!-- Welcome -->
+  <section class="panel top">
+    <div class="top-text">
+      <h2>Welcome to City Charity</h2>
+      <p class="pr">Discover local causes, join community events, and support what you care about. Browse upcoming highlights below or open the search to filter by city, time, and category.</p>
+    </div>
+
+    <!-- Banner -->
+    <div class="top-banner">
+      <div class="banner-track" id="bannerTrack">
+        <div class="banner-slide">
+          <img src="/images/banner-3.jpg" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Upcoming highlights -->
+  <section>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:8px">
+      <h3 style="margin:0">Active events</h3>
+      <small class="pr" id="resultHint">Showing {{events.length}} active events</small>
+    </div>
+    <div class="grid" id="eventsGrid">
+      <div *ngIf="error" class="list-empty"><p class="pr">Failed to load events</p></div>
+      <article class="card" *ngFor="let event of events">
+        <div class="card-head">
+          <div class="meta">
+            <span class="chip">{{event.category_name}}</span>
+            <span class="chip">{{event.organisation_name}}</span>
+            <span class="{{getStatusChip(event).cls}}">{{getStatusChip(event).label}}</span>
+          </div>
+          <h3 class="card-title">{{event.name}}</h3>
+        </div>
+        <div class="card-body">
+          <p class="pr">{{eventWhen(event)}}</p>
+          <p class="pr place">{{eventWhere(event)}}</p>
+        </div>
+        <div class="card-foot">
+          <a class="btn-primary btn-sm" [routerLink]="'/detail/'+event.id">View details</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <small>Powered by KAJSE</small>
+  </footer>
+</div>
