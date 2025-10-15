@@ -1,1 +1,99 @@
-<p>search works!</p>
+<div class="wrap">
+  <header class="header">
+    <div class="brand">
+      <div class="logo">
+        <img src="images/006-charity.png" alt="Logo" />
+      </div>
+      <div class="brand-meta">
+        <h1 class="brand-title">City Charity</h1>
+        <p class="brand-sub" id="subtitle">
+          Find community events and fundraisers
+        </p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a class="pill" routerLink="/">Home</a>
+      <a class="pill" routerLink="/search">Search</a>
+    </nav>
+  </header>
+
+  <!-- Toolbar / Filters -->
+  <section class="panel toolbar">
+    <div class="field">
+      <label for="q">Keyword</label>
+      <input id="q" type="text" placeholder="Title / summary / venue" name="keyword" [(ngModel)]="keyword" />
+    </div>
+
+    <div class="field">
+      <label for="city">City</label>
+      <input id="city" type="text" placeholder="City Name" name="city" [(ngModel)]="city" />
+    </div>
+
+    <div class="field">
+      <label for="state">State/Region</label>
+      <input id="state" type="text" placeholder="State/Region Name" name="state" [(ngModel)]="state" />
+    </div>
+
+    <div class="field sm">
+      <label for="categoryId">Category</label>
+      <select id="categoryId" name="category" [(ngModel)]="category">
+        <option value="">All</option>
+        <option *ngFor="let category of categories" [value]="category.id">{{category.name}}</option>
+      </select>
+    </div>
+
+    <div class="field sm">
+      <label for="status">Status</label>
+      <select id="status" name="status" [(ngModel)]="status">
+        <option value="active">Active/Upcoming</option>
+        <option value="upcoming">Upcoming only</option>
+        <option value="past">Past</option>
+        <option value="all">All</option>
+      </select>
+    </div>
+
+    <div class="field sm">
+      <label for="start">Start</label>
+      <input id="start" type="datetime-local" name="startDateTime" [(ngModel)]="startDateTime" />
+    </div>
+
+    <div class="field sm">
+      <label for="end">End</label>
+      <input id="end" type="datetime-local" name="endDateTime" [(ngModel)]="endDateTime" />
+    </div>
+
+    <div class="actions">
+      <button id="btnSearch" class="btn-primary" type="button" (click)="searchEvents()">
+        Search
+      </button>
+      <button id="btnReset" class="btn-ghost" type="button" (click)="resetSearch()">
+        Reset
+      </button>
+    </div>
+  </section>
+
+  <section class="grid" id="eventsGrid">
+    <div *ngIf="error" class="list-empty"><p class="pr">{{error}}</p></div>
+    <article class="card" *ngFor="let event of events">
+      <div class="card-head">
+        <div class="meta">
+          <span class="chip">{{event.category_name}}</span>
+          <span class="chip">{{event.organisation_name}}</span>
+          <span class="{{getStatusChip(event).cls}}">{{getStatusChip(event).label}}</span>
+        </div>
+        <h3 class="card-title">{{event.name}}</h3>
+      </div>
+      <div class="card-body">
+        <p class="pr">{{eventWhen(event)}}</p>
+        <p class="pr place">{{eventWhere(event)}}</p>
+      </div>
+      <div class="card-foot">
+        <a class="btn-primary btn-sm" [routerLink]="'/detail/'+event.id">View details</a>
+      </div>
+    </article>
+  </section>
+
+  <footer class="footer">
+    <small>Powered by KAJSE</small>
+  </footer>
+</div>

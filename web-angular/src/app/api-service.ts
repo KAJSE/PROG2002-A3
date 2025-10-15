@@ -10,7 +10,13 @@ export class ApiService {
   constructor(private httpClient: HttpClient) {
   }
 
-  getAllEvents() {
-    return this.httpClient.get(`${this.SERVER_URL}/events?status=all`)
+  getAllEvents(params: any) {
+    return this.httpClient.get(`${this.SERVER_URL}/events`, {
+      params
+    })
+  }
+
+  getAllCategories() {
+    return this.httpClient.get(`${this.SERVER_URL}/categories`)
   }
 }

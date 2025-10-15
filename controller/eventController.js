@@ -36,9 +36,13 @@ router.get('/', (req, res) => {
     where += ' AND e.category_id = ?';
     params.push(categoryId);
   }
-  if (start && end) {
+  if (start) {
     where += ' AND (e.start_datetime <= ? AND e.end_datetime >= ?)';
-    params.push(end, start);
+    params.push(start, start);
+  }
+  if (end) {
+    where += ' AND (e.start_datetime <= ? AND e.end_datetime >= ?)';
+    params.push(end, end);
   }
   if (q) {
     where += ' AND (e.name LIKE ? OR e.short_description LIKE ? OR e.venue_name LIKE ?)';

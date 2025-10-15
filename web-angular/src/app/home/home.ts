@@ -19,7 +19,7 @@ export class Home implements OnInit {
 
   // load all events
   ngOnInit(): void {
-    this.apiService.getAllEvents().subscribe((items: any) => {
+    this.apiService.getAllEvents({ status: 'all' }).subscribe((items: any) => {
       this.events = items;
     }, error => {
       this.error = 'Failed to load events'
