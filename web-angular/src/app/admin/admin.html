@@ -1,0 +1,39 @@
+<div class="wrap">
+  <!-- Header -->
+  <header class="header">
+    <div class="brand">
+      <div class="logo">
+        <img src="/images/006-charity.png" alt="Logo" />
+      </div>
+      <div class="brand-meta">
+        <h1 class="brand-title">City Charity</h1>
+        <p class="brand-sub" id="subtitle">
+          Find community events and fundraisers
+        </p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a class="pill" routerLink="/">Home</a>
+      <a class="pill" routerLink="/search" routerLinkActive="active">Search</a>
+      <a class="pill" routerLink="/admin" routerLinkActive="active">Admin</a>
+    </nav>
+  </header>
+
+  <div class="admin-wrap">
+    <header class="admin-header">
+      <h3>Admin Dashboard</h3>
+      <nav class="admin-nav">
+        <nav class="nav admin-nav">
+          <a class="pill" routerLink="categories" routerLinkActive="active">Categories</a>
+          <a class="pill" routerLink="organisations" routerLinkActive="active">Organisations</a>
+          <a class="pill" routerLink="events" routerLinkActive="active">Events</a>
+        </nav>
+      </nav>
+    </header>
+
+    <main class="admin-content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>
+

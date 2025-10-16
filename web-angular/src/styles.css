@@ -56,6 +56,9 @@ body{
   text-decoration:none;
   margin-left: 10px;
 }
+.nav .pill.active {
+  background: #98a6e0;
+}
 /* Panel / Toolbar */
 .panel{
   background:#ffffff;
