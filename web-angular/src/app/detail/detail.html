@@ -42,6 +42,47 @@
       <p class="pr" style="margin-top:6px">{{pct || 0}}% reached</p>
       <p class="pr">Confirmed registrations: {{event.confirmed_participants}}</p>
     </div>
+    <div class="panel soft" style="margin-top: 20px" *ngIf="event.registrations && event.registrations.length > 0">
+      <h3>Registrations</h3>
+      <table class="table">
+        <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Qty</th>
+          <th>Unit Price</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th>Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let reg of event.registrations">
+          <td>{{ reg.attendee_name }}</td>
+          <td>{{ reg.attendee_email }}</td>
+          <td>{{ reg.quantity }}</td>
+          <td>{{ reg.unit_price | number:'1.2-2' }}</td>
+          <td>{{ reg.amount | number:'1.2-2' }}</td>
+          <td>
+          <span class="chip" [ngClass]="{
+            'chip-green': reg.status === 'confirmed',
+            'chip-yellow': reg.status === 'pending',
+            'chip-red': reg.status === 'cancelled'
+          }">
+            {{ reg.status }}
+          </span>
+          </td>
+          <td>{{ reg.created_at | date:'yyyy-MM-dd HH:mm' }}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 若没有报名 -->
+    <div class="panel soft" *ngIf="event.registrations && event.registrations.length === 0">
+      <p>No registrations yet.</p>
+    </div>
+
     <div class="detail-actions">
       <a class="btn-ghost" routerLink="/search">Back to search</a>
       <a class="btn-primary" routerLink="/" onclick="alert(`Registration is under construction.`)">Register</a>

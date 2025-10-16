@@ -95,14 +95,21 @@ router.get('/:id', (req, res) => {
         FROM registrations
         WHERE event_id = ? AND status='confirmed'
       `;
+      const registrationsSql = `
+        SELECT id, attendee_name, attendee_email, quantity, unit_price, amount, status, created_at
+        FROM registrations
+        WHERE event_id = ?
+        ORDER BY created_at DESC
+      `;
 
       return Promise.all([
         Promise.resolve(event),
         pool.query(progressSql, [id]),
         pool.query(participantsSql, [id]),
+        pool.query(registrationsSql, [id]),
       ]);
     })
-    .then(([event, [pRows], [cRows]]) => {
+    .then(([event, [pRows], [cRows], [rRows]]) => {
       const progress_amount = parseFloat(pRows[0].progress_amount || 0);
       const goal = parseFloat(event.goal_amount || 0);
       const progress_percent = goal > 0 ? parseFloat(((progress_amount / goal) * 100).toFixed(1)) : null;
@@ -112,6 +119,7 @@ router.get('/:id', (req, res) => {
         progress_amount,
         progress_percent,
         confirmed_participants: cRows[0].confirmed_count,
+        registrations: rRows,
       });
     })
     .catch((err) => {

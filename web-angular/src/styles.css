@@ -305,3 +305,28 @@ input[type="text"],input[type="datetime-local"],select{
   margin-right: 10px;
   text-decoration: none;
 }
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-size: 0.95rem;
+}
+.table th, .table td {
+  border-bottom: 1px solid #ccc;
+  padding: 6px 8px;
+  text-align: left;
+}
+.chip-green {
+  background-color: #d4f8d4;
+  color: #2a7b2a;
+}
+.chip-yellow {
+  background-color: #fff9c4;
+  color: #8a6d00;
+}
+.chip-red {
+  background-color: #ffcccc;
+  color: #a00000;
+}
+
