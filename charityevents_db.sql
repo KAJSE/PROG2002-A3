@@ -59,6 +59,7 @@ CREATE TABLE registrations (
   attendee_email VARCHAR(255),
   quantity INT NOT NULL DEFAULT 1,
   unit_price DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  contact_phone VARCHAR(120),
   amount DECIMAL(10,2) AS (quantity * unit_price) STORED,
   status ENUM('pending','confirmed','cancelled') NOT NULL DEFAULT 'confirmed',
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
