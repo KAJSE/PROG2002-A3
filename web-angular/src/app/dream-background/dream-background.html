@@ -1,0 +1,19 @@
+<div class="container">
+  <img
+    src="/images/foggy-city.jpg"
+    alt="background"
+    class="background"
+  />
+  <div
+    class="circle-container"
+    *ngFor="let c of circles"
+    [ngStyle]="{
+      width: c.size,
+      height: c.size,
+      animation: c.keyframesName + ' ' + c.duration + ' linear infinite',
+      animationDelay: c.delay
+    }"
+  >
+    <div class="circle" [style.animationDelay]="c.innerDelay"></div>
+  </div>
+</div>
