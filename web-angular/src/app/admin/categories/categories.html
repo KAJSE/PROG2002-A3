@@ -8,12 +8,14 @@
         <th>ID</th>
         <th>Name</th>
         <th>Description</th>
+        <th>Status</th>
         <th>Action</th>
       </tr>
       <tr *ngFor="let cat of categories">
         <td>{{ cat.id }}</td>
         <td>{{ cat.name }}</td>
         <td>{{ cat.description }}</td>
+        <td>{{ cat.is_active ? 'Active' : 'Inactive' }}</td>
         <td>
           <button class="btn-primary btn-sm" style="margin-right: 10px;" (click)="openEditDialog(cat)">Edit</button>
           <button class="btn-primary btn-sm" (click)="deleteCategory(cat.id)">Delete</button>

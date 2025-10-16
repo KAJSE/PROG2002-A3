@@ -39,4 +39,20 @@ export class ApiService {
   deleteCategory(categoryId: number) {
     return this.httpClient.delete(`${this.SERVER_URL}/categories/${categoryId}`)
   }
+
+  getAllOrganisations() {
+    return this.httpClient.get(`${this.SERVER_URL}/organisations`);
+  }
+
+  addOrganisation(data: any) {
+    return this.httpClient.post(`${this.SERVER_URL}/organisations`, data);
+  }
+
+  updateOrganisation(id: number, data: any) {
+    return this.httpClient.put(`${this.SERVER_URL}/organisations/${id}`, data);
+  }
+
+  deleteOrganisation(id: number) {
+    return this.httpClient.delete(`${this.SERVER_URL}/organisations/${id}`);
+  }
 }

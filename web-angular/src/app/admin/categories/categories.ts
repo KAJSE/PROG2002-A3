@@ -18,9 +18,10 @@ export class Categories implements OnInit {
   errorMessage = '';
 
   constructor(private apiService: ApiService, private fb: FormBuilder) {
+    // create form group, add Validators to name field
     this.form = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
-      description: ['']
+      description: [''],
     });
   }
 
@@ -36,6 +37,7 @@ export class Categories implements OnInit {
     })
   }
 
+  // open dialog
   openAddDialog() {
     this.form.reset();
     this.isEditing = false;
@@ -43,6 +45,7 @@ export class Categories implements OnInit {
     this.showDialog = true;
   }
 
+  // open dialog and fill the form
   openEditDialog(category: any) {
     this.form.patchValue(category);
     this.selectedCategoryId = category.id;
@@ -73,6 +76,7 @@ export class Categories implements OnInit {
     if (this.form.invalid) return;
 
     const data = this.form.value;
+    console.log(data)
     if (this.isEditing) {
       this.apiService.updateCategory(this.selectedCategoryId!, data).subscribe(() => {
         this.form.reset();
