@@ -129,4 +129,58 @@ router.get('/:id', (req, res) => {
     });
 });
 
+router.post('/:id/register', async (req, res) => {
+  const eventId = req.params.id;
+  const { attendee_name, attendee_email, quantity, unit_price } = req.body;
+
+  // validate required fields
+  if (!attendee_name || !attendee_email) {
+    return res.status(400).json({ message: 'Name and email are required' });
+  }
+
+  // get quantity and price, calculate amount
+  const qty = parseInt(quantity, 10) || 1;
+  const price = parseFloat(unit_price) || 0.0;
+  const amount = qty * price;
+
+  try {
+    // Check if the event exists and has not been paused
+    const [eventRows] = await pool.query(
+      'SELECT id, is_suspended FROM events WHERE id=?',
+      [eventId]
+    );
+    if (!eventRows.length) {
+      return res.status(404).json({ message: 'Event not found' });
+    }
+    if (eventRows[0].is_suspended) {
+      return res.status(400).json({ message: 'Event is suspended' });
+    }
+
+    // insert registration
+    const [result] = await pool.query(
+      `
+      INSERT INTO registrations
+        (event_id, attendee_name, attendee_email, quantity, unit_price, amount, status, created_at)
+      VALUES (?, ?, ?, ?, ?, ?, 'confirmed', NOW())
+      `,
+      [eventId, attendee_name, attendee_email, qty, price, amount]
+    );
+
+    // query inserted row
+    const [rows] = await pool.query(
+      'SELECT * FROM registrations WHERE id=?',
+      [result.insertId]
+    );
+
+    res.status(201).json({
+      message: 'Registration successful',
+      registration: rows[0]
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'DB error' });
+  }
+});
+
+
 module.exports = router
