@@ -23,4 +23,8 @@ export class ApiService {
   getEventById(eventId: number) {
     return this.httpClient.get(`${this.SERVER_URL}/events/${eventId}`)
   }
+
+  addRegistration(eventId: number, body: any) {
+    return this.httpClient.post(`${this.SERVER_URL}/events/${eventId}/register`, body)
+  }
 }

@@ -131,7 +131,7 @@ router.get('/:id', (req, res) => {
 
 router.post('/:id/register', async (req, res) => {
   const eventId = req.params.id;
-  const { attendee_name, attendee_email, quantity, unit_price } = req.body;
+  const { attendee_name, attendee_email, quantity, unit_price, contact_phone } = req.body;
 
   // validate required fields
   if (!attendee_name || !attendee_email) {
@@ -141,7 +141,6 @@ router.post('/:id/register', async (req, res) => {
   // get quantity and price, calculate amount
   const qty = parseInt(quantity, 10) || 1;
   const price = parseFloat(unit_price) || 0.0;
-  const amount = qty * price;
 
   try {
     // Check if the event exists and has not been paused
@@ -156,14 +155,23 @@ router.post('/:id/register', async (req, res) => {
       return res.status(400).json({ message: 'Event is suspended' });
     }
 
+    // Check if this email has already registered for this event
+    const [existingRows] = await pool.query(
+      'SELECT id FROM registrations WHERE event_id=? AND attendee_email=?',
+      [eventId, attendee_email]
+    );
+    if (existingRows.length > 0) {
+      return res.status(400).json({ message: 'You have already registered for this event' });
+    }
+
     // insert registration
     const [result] = await pool.query(
       `
       INSERT INTO registrations
-        (event_id, attendee_name, attendee_email, quantity, unit_price, amount, status, created_at)
-      VALUES (?, ?, ?, ?, ?, ?, 'confirmed', NOW())
+        (event_id, attendee_name, attendee_email, quantity, unit_price, status, created_at)
+      VALUES (?, ?, ?, ?, ?, 'confirmed', NOW())
       `,
-      [eventId, attendee_name, attendee_email, qty, price, amount]
+      [eventId, attendee_name, attendee_email, qty, price]
     );
 
     // query inserted row

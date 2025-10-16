@@ -78,14 +78,14 @@
       </table>
     </div>
 
-    <!-- 若没有报名 -->
-    <div class="panel soft" *ngIf="event.registrations && event.registrations.length === 0">
+    <!-- if no registrations -->
+    <div class="panel soft" style="margin-top: 20px;" *ngIf="event.registrations && event.registrations.length === 0">
       <p>No registrations yet.</p>
     </div>
 
     <div class="detail-actions">
       <a class="btn-ghost" routerLink="/search">Back to search</a>
-      <a class="btn-primary" routerLink="/" onclick="alert(`Registration is under construction.`)">Register</a>
+      <a class="btn-primary" [routerLink]="'/register/' + event.id">Register</a>
     </div>
   </section>
 
