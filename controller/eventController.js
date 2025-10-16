@@ -190,5 +190,110 @@ router.post('/:id/register', async (req, res) => {
   }
 });
 
+router.post('/', async (req, res) => {
+  const {
+    organisation_id,
+    category_id,
+    name,
+    short_description,
+    full_description,
+    venue_name,
+    address_line1,
+    city,
+    state_region,
+    postcode,
+    start_datetime,
+    end_datetime,
+    goal_amount,
+    image_url
+  } = req.body;
+
+  // validate required fields
+  if (!organisation_id || !category_id || !name || !start_datetime || !end_datetime) {
+    return res.status(400).json({ message: 'Missing required fields' });
+  }
+
+  try {
+    // execute insert
+    const [result] = await pool.query(
+      `INSERT INTO events
+        (organisation_id, category_id, name, short_description, full_description, venue_name, address_line1,
+         city, state_region, postcode, start_datetime, end_datetime, goal_amount, image_url, is_suspended, created_at, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, NOW(), NOW())`,
+      [
+        organisation_id, category_id, name, short_description || null, full_description || null,
+        venue_name || null, address_line1 || null, city || null, state_region || null, postcode || null,
+        start_datetime, end_datetime, goal_amount || 0, image_url || null
+      ]
+    );
+
+    // query event after insert
+    const [rows] = await pool.query('SELECT * FROM events WHERE id=?', [result.insertId]);
+    res.status(201).json({ message: 'Event created', event: rows[0] });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'DB error' });
+  }
+});
+
+router.put('/:id', async (req, res) => {
+  const id = req.params.id;
+  const updates = [];
+  const params = [];
+
+  // using fields
+  const fields = ['organisation_id', 'category_id', 'name', 'short_description', 'full_description', 'venue_name', 'address_line1', 'city', 'state_region', 'postcode', 'start_datetime', 'end_datetime', 'goal_amount', 'image_url', 'is_suspended'];
+
+  // dynamic build SQL
+  fields.forEach(field => {
+    if (req.body[field] !== undefined) {
+      updates.push(`${field}=?`);
+      params.push(req.body[field]);
+    }
+  });
+
+  // add id to last parameters
+  params.push(id);
+
+  try {
+    // execute update
+    const [result] = await pool.query(
+      `UPDATE events SET ${updates.join(', ')}, updated_at=NOW() WHERE id=?`,
+      params
+    );
+
+    // query event after update
+    const [rows] = await pool.query('SELECT * FROM events WHERE id=?', [id]);
+    res.json({ message: 'Event updated', event: rows[0] });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'DB error' });
+  }
+});
+
+router.delete('/:id', async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    // check event has registrations or not
+    const [regRows] = await pool.query(
+      'SELECT COUNT(*) AS count FROM registrations WHERE event_id=?',
+      [id]
+    );
+
+    // not allow delete if it has registrations
+    if (regRows[0].count > 0) {
+      return res.status(400).json({ message: 'Cannot delete event with existing registrations' });
+    }
+
+    // execute delete
+    const [result] = await pool.query('DELETE FROM events WHERE id=?', [id]);
+    res.json({ message: 'Event deleted' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'DB error' });
+  }
+});
 
 module.exports = router
