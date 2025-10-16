@@ -76,7 +76,7 @@ export class Categories implements OnInit {
     if (this.form.invalid) return;
 
     const data = this.form.value;
-    console.log(data)
+    // call update or add by isEditing flag
     if (this.isEditing) {
       this.apiService.updateCategory(this.selectedCategoryId!, data).subscribe(() => {
         this.form.reset();

@@ -10,7 +10,7 @@ import { ApiService } from '../../api-service';
   templateUrl: './organisations.html',
   styleUrl: './organisations.css'
 })
-export class Organisations {
+export class Organisations implements OnInit {
   organisations: any[] = [];
   showDialog = false;
   isEditing = false;
@@ -32,6 +32,8 @@ export class Organisations {
     this.getOrganisations();
   }
 
+
+  // get organisations
   getOrganisations() {
     this.apiService.getAllOrganisations().subscribe((orgs: any) => {
       this.organisations = orgs;
@@ -56,6 +58,7 @@ export class Organisations {
   }
 
   deleteOrganisation(id: number) {
+    // delete confirm
     if (confirm('Are you sure to delete this organisation?')) {
       this.apiService.deleteOrganisation(id).subscribe(() => {
         this.getOrganisations();
@@ -66,10 +69,14 @@ export class Organisations {
   }
 
   saveOrganisation() {
+    // Mark all fields as visited
     this.form.markAllAsTouched();
+
+    // Check if the form is valid
     if (this.form.invalid) return;
 
     const data = this.form.value;
+    // call update or add by isEditing flag
     if (this.isEditing) {
       this.apiService.updateOrganisation(this.selectedOrganisationId!, data).subscribe(() => {
         this.form.reset();

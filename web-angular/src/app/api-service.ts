@@ -16,6 +16,18 @@ export class ApiService {
     })
   }
 
+  addEvent(data: any) {
+    return this.httpClient.post(`${this.SERVER_URL}/events`, data);
+  }
+
+  updateEvent(id: number, data: any) {
+    return this.httpClient.put(`${this.SERVER_URL}/events/${id}`, data);
+  }
+
+  deleteEvent(id: number) {
+    return this.httpClient.delete(`${this.SERVER_URL}/events/${id}`);
+  }
+
   getAllCategories() {
     return this.httpClient.get(`${this.SERVER_URL}/categories`)
   }
