@@ -1,1 +1,57 @@
-<p>categories works!</p>
+<div class="wrap">
+  <div class="panel">
+    <h2>Category Management</h2>
+    <button class="btn-primary btn-sm" (click)="openAddDialog()">Add Category</button>
+
+    <table class="data-table">
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Action</th>
+      </tr>
+      <tr *ngFor="let cat of categories">
+        <td>{{ cat.id }}</td>
+        <td>{{ cat.name }}</td>
+        <td>{{ cat.description }}</td>
+        <td>
+          <button class="btn-primary btn-sm" style="margin-right: 10px;" (click)="openEditDialog(cat)">Edit</button>
+          <button class="btn-primary btn-sm" (click)="deleteCategory(cat.id)">Delete</button>
+        </td>
+      </tr>
+    </table>
+
+    <!-- dialog -->
+    <div class="dialog" *ngIf="showDialog">
+      <div class="dialog-panel">
+        <h3>{{ isEditing ? 'Edit Category' : 'Add Category' }}</h3>
+        <form [formGroup]="form" (ngSubmit)="saveCategory()">
+          <div class="dialog-control">
+            <label>Name:</label>
+            <input type="text" formControlName="name" />
+            <div class="error" *ngIf="form.get('name')?.touched && form.get('name')?.invalid">
+              <small *ngIf="form.get('name')?.errors?.['required']">Name is required</small>
+              <small *ngIf="form.get('name')?.errors?.['minlength']">Minimum 2 characters</small>
+            </div>
+          </div>
+
+          <div class="dialog-control">
+            <label>Description:</label>
+            <textarea formControlName="description"></textarea>
+          </div>
+
+          <div class="dialog-actions">
+            <button class="btn-primary btn-sm" type="submit" style="margin-right: 10px;">
+              {{ isEditing ? 'Update' : 'Create' }}
+            </button>
+            <button class="btn-primary btn-sm" type="button" (click)="showDialog=false">Cancel</button>
+          </div>
+
+          <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+

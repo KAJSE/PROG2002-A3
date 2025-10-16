@@ -27,4 +27,16 @@ export class ApiService {
   addRegistration(eventId: number, body: any) {
     return this.httpClient.post(`${this.SERVER_URL}/events/${eventId}/register`, body)
   }
+
+  addCategory(data: any) {
+    return this.httpClient.post(`${this.SERVER_URL}/categories`, data)
+  }
+
+  updateCategory(categoryId: number, data: any) {
+    return this.httpClient.put(`${this.SERVER_URL}/categories/${categoryId}`, data)
+  }
+
+  deleteCategory(categoryId: number) {
+    return this.httpClient.delete(`${this.SERVER_URL}/categories/${categoryId}`)
+  }
 }

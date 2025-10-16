@@ -17,14 +17,3 @@ input {
   border-radius: 6px;
   border: 1px solid #ccc;
 }
-
-.error {
-  color: #e74c3c;
-  font-size: 13px;
-}
-
-.success {
-  color: #27ae60;
-  text-align: center;
-  margin-top: 10px;
-}
